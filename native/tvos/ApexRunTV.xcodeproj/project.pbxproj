@@ -1,0 +1,607 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04897679F78BB9202EC83AE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC09B5611D40CA5B78E6DF1A /* Assets.xcassets */; };
+		04C2D9B1B1480850BF78FAE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6F35F66858E76BFBB3B742 /* AppDelegate.swift */; };
+		0655CAF3C4DC3758A9018C7D /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C39030DEFDFAF3981CF1641B /* assets */; };
+		0E5FC116837A250EE813B86E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D762A3DF7148288CF4DD8A09 /* SceneDelegate.swift */; };
+		1104839AE9CAC206C166F305 /* world-model.js in Resources */ = {isa = PBXBuildFile; fileRef = 9626019A87B656F6E4A1608C /* world-model.js */; };
+		3AE0AAD2805A963C81B82541 /* engine.js in Resources */ = {isa = PBXBuildFile; fileRef = 1A04E7A033B872F9DF3033E3 /* engine.js */; };
+		4E11E45F7D4928362E13B687 /* RaceGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DACB51DC8E04AC42BA81EC /* RaceGeometry.swift */; };
+		536BC23354B731D5519D913D /* GameInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7C02FFE1542F63CE68921 /* GameInputTests.swift */; };
+		691BD80BA43BE05D06B3D9B1 /* RaceScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4119B30BF380E564AEBC8CE5 /* RaceScene.swift */; };
+		697D31349FDEB43814E6B294 /* race.js in Resources */ = {isa = PBXBuildFile; fileRef = 75570230D20380FC54F2AB0F /* race.js */; };
+		724AC9DE2BE8DF235AA8A64A /* EngineAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2FA278741DE6BC3E7F1BDD /* EngineAudio.swift */; };
+		7748EFBCAE9559EA17970E82 /* collision.js in Resources */ = {isa = PBXBuildFile; fileRef = F20F263C8C5F878971B9E741 /* collision.js */; };
+		8023556EBE10D2F05692EF0B /* motorcycles.js in Resources */ = {isa = PBXBuildFile; fileRef = 4E98FF288B39B52FFA17EB42 /* motorcycles.js */; };
+		85DC97FAAB0D0045855F197B /* host.js in Resources */ = {isa = PBXBuildFile; fileRef = 11CC2412E971E65760957CD5 /* host.js */; };
+		9903852DC449D9ECA59D3486 /* RaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110E988823EF05E524C8036B /* RaceViewController.swift */; };
+		BD4641383C8304089C25BCD6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 79CB57178452DB9165C97DD6 /* PrivacyInfo.xcprivacy */; };
+		BE3446A0EEC23127C158EBDF /* GameRuntimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92754D6BB4A592B965DE3FA3 /* GameRuntimeTests.swift */; };
+		D8052777FE4D6973CCFB9D70 /* coast.js in Resources */ = {isa = PBXBuildFile; fileRef = 3252ED1005D1108277185EB0 /* coast.js */; };
+		E243A67C5444ABE90AC25273 /* RaceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B33B4E17083B8362AC92F54 /* RaceUITests.swift */; };
+		F6CFEF64F578BD686BB00436 /* GameRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BBC5036207529944D99D67 /* GameRuntime.swift */; };
+		F87D324D4E86F2C5CE4AC3EF /* GameInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEE89F71A72FAF7D5041669 /* GameInput.swift */; };
+		F9A955412D66847E8C535F7A /* london.js in Resources */ = {isa = PBXBuildFile; fileRef = 73F8948564FEF816BD6BDD76 /* london.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		793C2803956E35F6048EA2BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 326870B483EEDB9DBE6681C5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A4805D9C5FEE1C114D474165;
+			remoteInfo = ApexRunTV;
+		};
+		F8F6CBFDD2770BC6C39F5BBF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 326870B483EEDB9DBE6681C5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A4805D9C5FEE1C114D474165;
+			remoteInfo = ApexRunTV;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		110E988823EF05E524C8036B /* RaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceViewController.swift; sourceTree = "<group>"; };
+		11CC2412E971E65760957CD5 /* host.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = host.js; sourceTree = "<group>"; };
+		1A04E7A033B872F9DF3033E3 /* engine.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = engine.js; sourceTree = "<group>"; };
+		3252ED1005D1108277185EB0 /* coast.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = coast.js; sourceTree = "<group>"; };
+		36194DF4D7F386FCAC4BF570 /* ApexRunTVUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ApexRunTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AF7C02FFE1542F63CE68921 /* GameInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInputTests.swift; sourceTree = "<group>"; };
+		4119B30BF380E564AEBC8CE5 /* RaceScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceScene.swift; sourceTree = "<group>"; };
+		4C6F35F66858E76BFBB3B742 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4E98FF288B39B52FFA17EB42 /* motorcycles.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = motorcycles.js; sourceTree = "<group>"; };
+		725C884A8BDD94101211A2FB /* ApexRunTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ApexRunTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73F8948564FEF816BD6BDD76 /* london.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = london.js; sourceTree = "<group>"; };
+		75570230D20380FC54F2AB0F /* race.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = race.js; sourceTree = "<group>"; };
+		79CB57178452DB9165C97DD6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		7B33B4E17083B8362AC92F54 /* RaceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceUITests.swift; sourceTree = "<group>"; };
+		82BBC5036207529944D99D67 /* GameRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRuntime.swift; sourceTree = "<group>"; };
+		92754D6BB4A592B965DE3FA3 /* GameRuntimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRuntimeTests.swift; sourceTree = "<group>"; };
+		9626019A87B656F6E4A1608C /* world-model.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "world-model.js"; sourceTree = "<group>"; };
+		B3DACB51DC8E04AC42BA81EC /* RaceGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceGeometry.swift; sourceTree = "<group>"; };
+		BB9C053325BEAB8A6079BB19 /* ApexRunTVTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ApexRunTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C39030DEFDFAF3981CF1641B /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../dist/assets; sourceTree = SOURCE_ROOT; };
+		CC09B5611D40CA5B78E6DF1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CDEE89F71A72FAF7D5041669 /* GameInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInput.swift; sourceTree = "<group>"; };
+		D762A3DF7148288CF4DD8A09 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		DA2FA278741DE6BC3E7F1BDD /* EngineAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineAudio.swift; sourceTree = "<group>"; };
+		F20F263C8C5F878971B9E741 /* collision.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = collision.js; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		224809D033036190E52F2976 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B33B4E17083B8362AC92F54 /* RaceUITests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		28D8966593CC324049B37432 = {
+			isa = PBXGroup;
+			children = (
+				C39030DEFDFAF3981CF1641B /* assets */,
+				CC09B5611D40CA5B78E6DF1A /* Assets.xcassets */,
+				79CB57178452DB9165C97DD6 /* PrivacyInfo.xcprivacy */,
+				C82C9BC9D0373203B6214333 /* Runtime */,
+				31DD2B5B9CDDFDBD45535172 /* Sources */,
+				3F20580A53A2F764A0DF4468 /* src */,
+				57B16E9BA8B6EE97FA53C1FE /* Tests */,
+				224809D033036190E52F2976 /* UITests */,
+				DDB572C2355417C2F6C82019 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		31DD2B5B9CDDFDBD45535172 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4C6F35F66858E76BFBB3B742 /* AppDelegate.swift */,
+				DA2FA278741DE6BC3E7F1BDD /* EngineAudio.swift */,
+				CDEE89F71A72FAF7D5041669 /* GameInput.swift */,
+				82BBC5036207529944D99D67 /* GameRuntime.swift */,
+				B3DACB51DC8E04AC42BA81EC /* RaceGeometry.swift */,
+				4119B30BF380E564AEBC8CE5 /* RaceScene.swift */,
+				110E988823EF05E524C8036B /* RaceViewController.swift */,
+				D762A3DF7148288CF4DD8A09 /* SceneDelegate.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		3F20580A53A2F764A0DF4468 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				3252ED1005D1108277185EB0 /* coast.js */,
+				F20F263C8C5F878971B9E741 /* collision.js */,
+				1A04E7A033B872F9DF3033E3 /* engine.js */,
+				73F8948564FEF816BD6BDD76 /* london.js */,
+				4E98FF288B39B52FFA17EB42 /* motorcycles.js */,
+				75570230D20380FC54F2AB0F /* race.js */,
+				9626019A87B656F6E4A1608C /* world-model.js */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		57B16E9BA8B6EE97FA53C1FE /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3AF7C02FFE1542F63CE68921 /* GameInputTests.swift */,
+				92754D6BB4A592B965DE3FA3 /* GameRuntimeTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		C82C9BC9D0373203B6214333 /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				11CC2412E971E65760957CD5 /* host.js */,
+			);
+			path = Runtime;
+			sourceTree = "<group>";
+		};
+		DDB572C2355417C2F6C82019 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				725C884A8BDD94101211A2FB /* ApexRunTV.app */,
+				BB9C053325BEAB8A6079BB19 /* ApexRunTVTests.xctest */,
+				36194DF4D7F386FCAC4BF570 /* ApexRunTVUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1173FBCE629ECA157431DF03 /* ApexRunTVUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07050A042EE3B54A8BFEB14E /* Build configuration list for PBXNativeTarget "ApexRunTVUITests" */;
+			buildPhases = (
+				0FBE730DDBF4E4B6192A8768 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0E8E68138F8306DBCD4EF25A /* PBXTargetDependency */,
+			);
+			name = ApexRunTVUITests;
+			packageProductDependencies = (
+			);
+			productName = ApexRunTVUITests;
+			productReference = 36194DF4D7F386FCAC4BF570 /* ApexRunTVUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		A4805D9C5FEE1C114D474165 /* ApexRunTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEB186289809FB16C85D9804 /* Build configuration list for PBXNativeTarget "ApexRunTV" */;
+			buildPhases = (
+				BDAF4D07E8EC021E4BC1AB12 /* Sources */,
+				30164D85C3F357E06FD550EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ApexRunTV;
+			packageProductDependencies = (
+			);
+			productName = ApexRunTV;
+			productReference = 725C884A8BDD94101211A2FB /* ApexRunTV.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AC018A43F95FD5AAD9F1675A /* ApexRunTVTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 68AAB673352B0DC5AF6A77EC /* Build configuration list for PBXNativeTarget "ApexRunTVTests" */;
+			buildPhases = (
+				5EEEABF679D0A2603204EDCF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC333B7A4F87C944E546BA03 /* PBXTargetDependency */,
+			);
+			name = ApexRunTVTests;
+			packageProductDependencies = (
+			);
+			productName = ApexRunTVTests;
+			productReference = BB9C053325BEAB8A6079BB19 /* ApexRunTVTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		326870B483EEDB9DBE6681C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1173FBCE629ECA157431DF03 = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = A4805D9C5FEE1C114D474165;
+					};
+					A4805D9C5FEE1C114D474165 = {
+						DevelopmentTeam = MD4N52M5TD;
+						ProvisioningStyle = Automatic;
+					};
+					AC018A43F95FD5AAD9F1675A = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AF0A8768A07DD87CE9AAD3B3 /* Build configuration list for PBXProject "ApexRunTV" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 28D8966593CC324049B37432;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DDB572C2355417C2F6C82019 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4805D9C5FEE1C114D474165 /* ApexRunTV */,
+				AC018A43F95FD5AAD9F1675A /* ApexRunTVTests */,
+				1173FBCE629ECA157431DF03 /* ApexRunTVUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		30164D85C3F357E06FD550EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04897679F78BB9202EC83AE9 /* Assets.xcassets in Resources */,
+				BD4641383C8304089C25BCD6 /* PrivacyInfo.xcprivacy in Resources */,
+				0655CAF3C4DC3758A9018C7D /* assets in Resources */,
+				D8052777FE4D6973CCFB9D70 /* coast.js in Resources */,
+				7748EFBCAE9559EA17970E82 /* collision.js in Resources */,
+				3AE0AAD2805A963C81B82541 /* engine.js in Resources */,
+				85DC97FAAB0D0045855F197B /* host.js in Resources */,
+				F9A955412D66847E8C535F7A /* london.js in Resources */,
+				8023556EBE10D2F05692EF0B /* motorcycles.js in Resources */,
+				697D31349FDEB43814E6B294 /* race.js in Resources */,
+				1104839AE9CAC206C166F305 /* world-model.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0FBE730DDBF4E4B6192A8768 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E243A67C5444ABE90AC25273 /* RaceUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5EEEABF679D0A2603204EDCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				536BC23354B731D5519D913D /* GameInputTests.swift in Sources */,
+				BE3446A0EEC23127C158EBDF /* GameRuntimeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDAF4D07E8EC021E4BC1AB12 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04C2D9B1B1480850BF78FAE9 /* AppDelegate.swift in Sources */,
+				724AC9DE2BE8DF235AA8A64A /* EngineAudio.swift in Sources */,
+				F87D324D4E86F2C5CE4AC3EF /* GameInput.swift in Sources */,
+				F6CFEF64F578BD686BB00436 /* GameRuntime.swift in Sources */,
+				4E11E45F7D4928362E13B687 /* RaceGeometry.swift in Sources */,
+				691BD80BA43BE05D06B3D9B1 /* RaceScene.swift in Sources */,
+				9903852DC449D9ECA59D3486 /* RaceViewController.swift in Sources */,
+				0E5FC116837A250EE813B86E /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0E8E68138F8306DBCD4EF25A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A4805D9C5FEE1C114D474165 /* ApexRunTV */;
+			targetProxy = 793C2803956E35F6048EA2BB /* PBXContainerItemProxy */;
+		};
+		DC333B7A4F87C944E546BA03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A4805D9C5FEE1C114D474165 /* ApexRunTV */;
+			targetProxy = F8F6CBFDD2770BC6C39F5BBF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5261A8CF6BC0EADFFBA8144C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexrun.ApexRunTVUITests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = ApexRunTV;
+			};
+			name = Release;
+		};
+		54F6178D7C26D747388923A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Release;
+		};
+		7CF6A8D9E0E230CFD1604249 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexrun.ApexRunTVTests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ApexRunTV.app/ApexRunTV";
+			};
+			name = Release;
+		};
+		8FC87F49536553049523EF90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = MD4N52M5TD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Apex Run";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.racing-games";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sirwanafifi.apexrun;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		B7E3C7C54D7ACC7455056C10 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = MD4N52M5TD;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Apex Run";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.racing-games";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sirwanafifi.apexrun;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+		B8C792BC6A64E3FC6A2BF558 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexrun.ApexRunTVUITests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = ApexRunTV;
+			};
+			name = Debug;
+		};
+		D55F3F54BEADA71F65B866C6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.apexrun.ApexRunTVTests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ApexRunTV.app/ApexRunTV";
+			};
+			name = Debug;
+		};
+		EA750B25DB991EB1ED7762B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07050A042EE3B54A8BFEB14E /* Build configuration list for PBXNativeTarget "ApexRunTVUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8C792BC6A64E3FC6A2BF558 /* Debug */,
+				5261A8CF6BC0EADFFBA8144C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		68AAB673352B0DC5AF6A77EC /* Build configuration list for PBXNativeTarget "ApexRunTVTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D55F3F54BEADA71F65B866C6 /* Debug */,
+				7CF6A8D9E0E230CFD1604249 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AF0A8768A07DD87CE9AAD3B3 /* Build configuration list for PBXProject "ApexRunTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA750B25DB991EB1ED7762B5 /* Debug */,
+				54F6178D7C26D747388923A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CEB186289809FB16C85D9804 /* Build configuration list for PBXNativeTarget "ApexRunTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8FC87F49536553049523EF90 /* Debug */,
+				B7E3C7C54D7ACC7455056C10 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 326870B483EEDB9DBE6681C5 /* Project object */;
+}

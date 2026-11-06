@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d1512"><meta name="description" content="Apex Run. Race the Pacific cliffs or ride the high Sierra, in clear weather or rain."><title>Apex Run</title><link rel="icon" href="assets/mark.svg" type="image/svg+xml"><link rel="preload" href="assets/BarlowCondensed-ExtraBoldItalic.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="style.css?v=a39cc2c49131"><script defer src="game.js?v=babb5291fa87"></script></head><body>
+  <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="mark" viewBox="0 0 52 34"><path d="M0 32 21 2h9L9 32zm15 0L35 3l13 29H36l-5-12-8 12z"/><path d="m44 2 8 17-2 7L39 2z"/></symbol>
+    <symbol id="sound-on" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15 8c2.5 2 2.5 6 0 8m3-11c4.6 3.9 4.6 10.1 0 14"/></symbol>
+    <symbol id="sound-off" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM16 9l6 6m0-6-6 6"/></symbol>
+    <symbol id="expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/></symbol>
+    <symbol id="camera" viewBox="0 0 24 24"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="rain" viewBox="0 0 24 24"><path d="M6.3 14a4.3 4.3 0 0 1-.3-8.6A6.2 6.2 0 0 1 18 6.6a3.7 3.7 0 0 1 .1 7.4H6.3zM8 17l-1.2 2.4m5.7-2.4-1.6 3.2m6-3.2-1.1 2.4"/></symbol>
+    <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+    <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="14" r="7.5"/><path d="M12 10v4l3 1m-5-13h4m-2 0v3m5 2 2-2"/></symbol>
+    <symbol id="play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14m8-14v14" stroke-width="4"/></symbol>
+    <symbol id="reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/></symbol>
+    <symbol id="flag" viewBox="0 0 24 24"><path d="M4 21V3m0 1c5-3 10 3 16 0v10c-6 3-10-3-16 0"/></symbol>
+    <symbol id="route" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 5h8a3.5 3.5 0 0 1 0 7H9a3.5 3.5 0 0 0 0 7h8"/></symbol>
+    <symbol id="keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M5 9h1m3 0h1m3 0h1m3 0h1M5 12h1m3 0h1m3 0h1m3 0h1M8 15h8"/></symbol>
+    <symbol id="chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="trophy" viewBox="0 0 24 24"><path d="M7 3h10v5c0 4-2.2 6.5-5 6.5S7 12 7 8V3zm0 2H3v2c0 3 1.6 4.5 5.2 4.5M17 5h4v2c0 3-1.6 4.5-5.2 4.5M12 15v4m-4 2h8"/></symbol>
+  </svg>
+<main id="game-frame" aria-label="Apex Run motorcycle game">
+  <div class="screen" id="screen">
+    <canvas id="race-canvas" role="img" aria-label="Motorcycle racing scenery"></canvas><div class="vignette" aria-hidden="true"></div>
+    <div id="riding-hud" class="riding-hud" hidden>
+      <div class="hud time-hud"><span class="hud-label">RUN TIME</span><strong id="timer">00:00.000</strong><span id="pace-delta" hidden></span></div>
+      <div class="hud progress-hud"><span class="hud-label" id="right-hud-label">POSITION</span><b id="sector-num">04</b><span id="right-hud-total"> / 04</span><small id="race-gap"></small></div>
+      <div class="hud instrument-hud"><strong id="speed">000</strong><span>KM/H</span><b id="gear">N</b><div id="tach" class="tach" aria-hidden="true"></div></div>
+      <div id="place-cue" class="place-cue" hidden><b id="place-name"></b><span id="place-detail"></span></div>
+      <div class="race-progress" aria-hidden="true"><i id="progress-bar"></i></div>
+    </div>
+    <button id="menu-btn" class="menu-toggle" type="button" aria-label="Open game menu" aria-haspopup="dialog" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>MENU</span></button>
+    <div id="race-alert" class="race-alert" hidden></div>
+    <div id="incident-panel" class="incident-panel" hidden><b id="incident-title" role="status" aria-live="polite">BIKE DOWN</b><span id="incident-detail"></span><i><em id="incident-progress"></em></i></div>
+    <div id="count-wrap" class="count-wrap" hidden><span>GET READY</span><b id="count-val">3</b></div>
+    <div id="gesture-guide" class="gesture-guide" hidden><svg viewBox="0 0 82 64" aria-hidden="true"><path d="M15 30h52m-45-7-7 7 7 7m38-14 7 7-7 7"/><circle cx="41" cy="30" r="11"/><path d="M37 32V18a4 4 0 0 1 8 0v13l5-2a4 4 0 0 1 5 4l-3 13a9 9 0 0 1-9 7h-4a9 9 0 0 1-8-5l-5-9a4 4 0 0 1 6-5l5 4"/></svg><div><b>HOLD TO RIDE · DRAG TO LEAN</b><span>Second finger brakes. Lift to coast.</span><small id="gesture-manual" hidden>Flick ↑ to shift up · ↓ to shift down</small></div></div>
+    <div id="gesture-reset" class="gesture-reset" role="status" aria-live="polite" hidden>Lift all fingers, then touch again to ride.</div>
+  </div>
+  <section id="game-menu" class="game-menu" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+    <div class="menu-shade" aria-hidden="true"></div>
+    <div class="menu-shell">
+      <header class="menu-header"><div class="brand" id="menu-title"><svg aria-hidden="true"><use href="#mark"/></svg><span>APEX<span>RUN</span></span></div><span id="menu-state" class="menu-state">THE OPEN ROAD AWAITS</span><button id="menu-close" class="menu-close" aria-label="Resume ride" hidden>×</button></header>
+      <nav id="menu-nav" class="menu-nav" role="tablist" aria-label="Game menu"><button id="nav-home" role="tab" data-panel="home" aria-controls="panel-home" aria-selected="true">RIDE</button><button id="nav-garage" role="tab" data-panel="garage" aria-controls="panel-garage" aria-selected="false">GARAGE</button><button id="nav-settings" role="tab" data-panel="settings" aria-controls="panel-settings" aria-selected="false">SETTINGS</button><button id="nav-controls" role="tab" data-panel="controls" aria-controls="panel-controls" aria-selected="false">CONTROLS</button><button id="nav-data" role="tab" data-panel="data" aria-controls="panel-data" aria-selected="false">RIDE DATA</button></nav>
+      <div class="menu-content" id="menu-content">
+        <section id="panel-home" class="menu-panel home-panel" role="tabpanel" aria-labelledby="nav-home">
+          <div id="ride-home"><div class="eyebrow"><span id="event-number">STAGE 02</span><i></i><span id="event-region">PACIFIC COAST, CA</span></div><h1 id="event-title">CAPE MERIDIAN</h1><p id="event-description" class="event-description">Pacific cliffs. An inlet crossing. One final run to the lighthouse.</p><p class="session-line"><span id="event-kind">ROAD RACE</span><i>·</i><span id="session-distance">4.80 KM</span><i>·</i><span id="session-weather">CLEAR</span><i>·</i><span id="session-gearbox">AUTO</span></p></div>
+          <div id="finish-home" hidden><span id="dialog-kicker" class="eyebrow">THE FINISH LINE</span><h2 id="dialog-title" class="finish-title">RIDE COMPLETE</h2><p id="dialog-info" class="finish-time"></p><div id="finish-stats" class="finish-stats"><div><small>TOP SPEED</small><b id="finish-speed">—</b></div><div><small>MAX LEAN</small><b id="finish-lean">—</b></div><div><small>ON ASPHALT</small><b id="finish-clean">—</b></div><div><small>CRASHES</small><b id="finish-crashes">0</b></div></div><ol id="finish-order" class="running-order finish-order" aria-label="Final classification"></ol></div>
+          <button id="home-motorcycle" class="home-motorcycle" aria-label="Open motorcycle garage"><span>YOUR MOTORCYCLE</span><b id="home-bike-name">APEX R600</b><small id="home-bike-finish"></small><i aria-hidden="true">→</i></button><div class="home-actions"><button id="action-btn" class="ride-button"><svg aria-hidden="true"><use href="#play"/></svg><span>RIDE</span><i aria-hidden="true">↗</i></button><button id="restart-btn" class="quiet-button" hidden>Restart ride</button><button id="change-event-btn" class="quiet-button">Change event <span aria-hidden="true">→</span></button></div>
+          <div class="personal-best"><span id="record-label">RACE DISTANCE</span><b id="best-val">4.80 KM</b></div><p id="resume-note" class="menu-note" hidden>Take a breath. Your ride is paused.</p>
+        </section>
+        <section id="panel-garage" class="menu-panel garage-panel" role="tabpanel" aria-labelledby="nav-garage" hidden>
+          <div class="garage-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h2 class="panel-title">THE GARAGE</h2></div><span class="garage-save">SAVED AUTOMATICALLY</span></div>
+          <div id="garage-lock" class="setup-lock" hidden><p>Your motorcycle is locked for this ride. End the ride to change bikes or customize it.</p><button id="garage-end-ride" class="text-action">End ride & customize →</button></div>
+          <div class="garage-layout">
+            <div class="garage-showroom">
+              <div class="garage-preview"><canvas id="garage-canvas" role="img" aria-label="Your motorcycle in the studio"></canvas><div class="garage-preview-label"><b id="garage-model-name"></b><span id="garage-model-class"></span></div><span id="garage-preview-status" class="garage-preview-status" hidden>Preparing your motorcycle…</span></div>
+              <div class="garage-views" role="group" aria-label="Motorcycle preview"><button data-garage-view="studio" aria-pressed="true">Studio</button><button data-garage-view="chase" aria-pressed="false">Chase</button><button data-garage-view="cockpit" aria-pressed="false">Cockpit</button></div>
+              <p id="garage-description" class="garage-description"></p><dl id="garage-stats" class="garage-stats"></dl>
+            </div>
+            <div class="garage-workbench">
+              <fieldset class="garage-group"><legend>01 <span>CHOOSE YOUR MOTORCYCLE</span></legend><div id="garage-models" class="garage-models"></div></fieldset>
+              <fieldset class="garage-group"><legend>02 <span>PAINT</span><b id="garage-paint-label"></b></legend><div id="garage-paints" class="garage-swatches"></div></fieldset>
+              <div class="garage-pair"><fieldset class="garage-group"><legend>ACCENT <b id="garage-accent-label"></b></legend><div id="garage-accents" class="garage-swatches"></div></fieldset><fieldset class="garage-group"><legend>WHEELS <b id="garage-wheels-label"></b></legend><div id="garage-wheels" class="garage-swatches"></div></fieldset></div>
+              <div class="garage-pair garage-detail-pair"><fieldset class="garage-group"><legend>03 <span>LIVERY</span></legend><div id="garage-liveries" class="garage-liveries"></div></fieldset><fieldset class="garage-group garage-number-group"><legend><label for="garage-number">RACE NUMBER</label></legend><div class="garage-number"><button id="garage-number-down" type="button" aria-label="Decrease race number">−</button><input id="garage-number" type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="99" step="1" value="27" aria-describedby="garage-number-note"><button id="garage-number-up" type="button" aria-label="Increase race number">+</button></div><small id="garage-number-note">1–99 · Shown with race livery</small></fieldset></div>
+              <details class="garage-mobile-specs"><summary>ENGINE & RIDING CHARACTER</summary><p id="garage-mobile-description"></p><dl id="garage-mobile-stats" class="garage-stats"></dl></details>
+            </div>
+          </div>
+        </section>
+        <section id="panel-settings" class="menu-panel" role="tabpanel" aria-labelledby="nav-settings" hidden><div class="eyebrow">YOUR ROAD. YOUR RIDE.</div><h2 class="panel-title">SET THE PACE</h2>
+          <div id="setup-lock" class="setup-lock" hidden><p>Your current ride is paused. End it to change the event, weather, or gearbox.</p><button id="end-ride-btn" class="text-action">End ride & change setup →</button></div>
+          <fieldset class="setting-group"><legend>EVENT</legend><div class="course-options"><button type="button" data-course="sierra" aria-pressed="false"><small>01 / TIME TRIAL</small><b>Sierra Pass</b><span>4.00 km · Alpine ascent</span></button><button type="button" data-course="coast" aria-pressed="true"><small>02 / ROAD RACE</small><b>Cape Meridian</b><span>4.80 km · Pacific coast</span></button><button type="button" data-course="london" aria-pressed="false"><small>03 / ROAD RACE</small><b>A3 London</b><span>6.00 km · Capital approach</span></button></div></fieldset>
+          <fieldset class="setting-group setting-row"><legend>WEATHER</legend><div class="choices"><button data-weather="clear" aria-pressed="true"><svg><use href="#sun"/></svg>Clear</button><button data-weather="rain" aria-pressed="false"><svg><use href="#rain"/></svg>Rain</button></div></fieldset>
+          <fieldset class="setting-group setting-row"><legend>GEARBOX</legend><div class="choices"><button data-transmission="auto" aria-pressed="true">Automatic</button><button data-transmission="manual" aria-pressed="false">Manual</button></div></fieldset>
+          <div class="setting-toggles"><button id="camera-btn" class="setting-toggle"><span><svg><use href="#camera"/></svg>Camera</span><b>Cockpit</b></button><button id="sound-btn" class="setting-toggle" aria-pressed="true"><span><svg><use href="#sound-on"/></svg>Sound</span><b>On</b></button><button id="full-btn" class="setting-toggle" aria-pressed="false"><span><svg><use href="#expand"/></svg>Fullscreen</span><b>Enter</b></button></div><p id="fullscreen-note" class="menu-note" aria-live="polite"></p>
+        </section>
+        <section id="panel-controls" class="menu-panel" role="tabpanel" aria-labelledby="nav-controls" hidden><div class="eyebrow">FIND YOUR RHYTHM</div><h2 class="panel-title">FEEL THE ROAD</h2>
+          <div id="touch-riding-help" class="touch-riding-help" hidden><div class="control-row"><i>01</i><div><b>Hold to accelerate</b><p>Place a finger anywhere on the view. Drag it left or right to lean.</p></div></div><div class="control-row"><i>02</i><div><b>Second finger to brake</b><p>Hold a second finger while steering. Lift your fingers to coast.</p></div></div><div id="touch-manual-help" class="control-row" hidden><i>03</i><div><b>Flick to shift</b><p>Flick your riding finger up to upshift or down to downshift, then return to the starting point.</p></div></div><p class="menu-note">After a pause or recovery, lift your fingers and begin a fresh touch.</p></div>
+          <div id="keyboard-controls" class="keyboard-controls"><div><span>Throttle</span><b><kbd>W</kbd><kbd>↑</kbd></b></div><div><span>Brake</span><b><kbd>S</kbd><kbd>↓</kbd></b></div><div><span>Lean</span><b><kbd>A</kbd><kbd>D</kbd><small> / </small><kbd>←</kbd><kbd>→</kbd></b></div><div id="shift-help" hidden><span>Shift down / up</span><b><kbd>Q</kbd><kbd>E</kbd></b></div><div><span>Camera</span><b><kbd>C</kbd></b></div><div><span>Menu</span><b><kbd>P</kbd><kbd>ESC</kbd></b></div></div>
+          <details class="controller-help"><summary>Controller bindings</summary><p>Left stick to lean. RT to accelerate, LT to brake. RB shifts up and LB shifts down in manual.</p></details><p id="ride-tip" class="ride-tip">Brake before the bend. Lean in, then roll on the throttle as the road opens.</p><p class="menu-note">A light brush can unsettle the bike. Hard impacts cause a slide and automatic recovery; the clock keeps running.</p>
+        </section>
+        <section id="panel-data" class="menu-panel data-panel" role="tabpanel" aria-labelledby="nav-data" hidden><div class="eyebrow">EVERY CORNER COUNTS</div><h2 class="panel-title">THE RIDE</h2><div id="race-board"><h3 id="order-title">STARTING GRID</h3><ol id="running-order" class="running-order" aria-label="Rider positions"></ol></div>
+          <div class="telemetry-panel"><div class="telemetry-title"><h3>RIDE TRACE</h3><div class="trace-key"><span>— Speed</span><span id="trace-pb-key" hidden>┄ Personal best</span></div></div><svg id="ride-plot" viewBox="0 0 600 70" preserveAspectRatio="none" role="img" aria-label="Ride telemetry"><path class="plot-grid" d="M0 17H600m-600 25H600M200 0v70m200-70v70"/><path id="profile-path"/><rect id="shed-band" y="0" height="70" width="0"><title>Route landmark</title></rect><path id="speed-trace"/><path id="best-trace"/><line id="trace-position" x1="0" x2="0" y1="0" y2="70"/></svg><div class="plot-axis"><span>0 KM</span><span id="axis-middle">2.4 KM</span><span id="axis-end">4.8 KM</span></div><div class="telemetry-numbers"><span>TOP SPEED <b id="top-speed">—</b><small>km/h</small></span><span>MAX LEAN <b id="max-lean">—</b><small>deg</small></span></div></div>
+          <h3>SECTOR SPLITS</h3><div id="split-grid" class="split-grid"><div><span>SECTOR 01</span><b>--:--.---</b></div><div><span>SECTOR 02</span><b>--:--.---</b></div><div><span>SECTOR 03</span><b>--:--.---</b></div></div><p id="medals" class="medals"><span>GOLD <b id="gold-pace">1:30</b></span><span>SILVER <b id="silver-pace">1:45</b></span><span>BRONZE <b id="bronze-pace">2:05</b></span></p>
+        </section>
+      </div>
+      <div id="garage-launch" class="garage-launch" hidden><p><b id="garage-ride-summary"></b><span id="garage-ride-note">Your bike. Your line.</span></p><button id="garage-start" class="ride-button"><svg aria-hidden="true"><use href="#play"/></svg><span>START RIDE</span><i aria-hidden="true">↗</i></button></div>
+      <footer class="menu-footer"><span id="menu-footer-course">CAPE MERIDIAN</span><span id="menu-footer-tip">HEADPHONES RECOMMENDED</span></footer>
+    </div>
+  </section>
+</main>
+</body></html>

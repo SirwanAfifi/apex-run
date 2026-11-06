@@ -1,0 +1,9 @@
+# The buildless game source lives in dist.
+!/dist/
+!/dist/**
+
+# Local Apple build output and Xcode per-user state.
+native/tvos/build/
+native/tvos/*.xcresult/
+**/xcuserdata/
+.xcodebuildmcp/
