@@ -81,6 +81,15 @@ function setup(options = {}) {
     },
     shiftGear: direction => { shifts.push({direction, at: now}); return options.rejectShift ? false : true; }
   };
+  let motionState = {supported: true, enabled: false, status: 'off', steer: 0}, recenters = 0;
+  if (options.motion) window.ApexMotion = {
+    getState: () => ({...motionState}),
+    recenter: () => {
+      if (!motionState.enabled) return;
+      recenters++; motionState.steer = 0;
+      window.dispatchEvent(new DetailEvent('apex:motion', {detail: {...motionState}}));
+    }
+  };
   if (options.engine) {
     window.ApexWorld = {
       roadHalf: 4.65, curvature: () => 0, grade: () => 0,
@@ -117,10 +126,61 @@ function setup(options = {}) {
   }
   function publish(patch) { Object.assign(state, patch); window.dispatchEvent(new DetailEvent('apex:update', {detail: {...state}})); }
   function signal(name, detail) { window.dispatchEvent(new DetailEvent(name, {detail})); }
+  function motion(patch) { Object.assign(motionState, patch); signal('apex:motion', {...motionState}); }
   const neutral = () => { assert.equal(input.steer, 0); assert.equal(input.throttle, 0); assert.equal(input.brake, 0); };
   return {window, document, screen, surface, capture, controller, game, pointer, advance, frame, tick, publish, signal, neutral,
-    input: () => input, writes, shifts, notifications, state: () => ({...state})};
+    input: () => input, writes, shifts, notifications, state: () => ({...state}), motion, recenters: () => recenters};
 }
+
+test('tilt steers a held primary without finger movement and retains touch gas, brake and release', () => {
+  const h = setup({motion: true});
+  h.motion({enabled: true, status: 'ready', steer: .7}); h.neutral();
+  h.pointer('pointerdown', 1); assert.equal(h.recenters(), 1);
+  assert.equal(h.input().throttle, 1); assert.equal(h.input().steer, 0);
+  h.motion({steer: .6}); assert.equal(h.input().steer, .6);
+  h.pointer('pointermove', 1, 10); assert.equal(h.input().steer, .6, 'drag must not fight tilt');
+  h.pointer('pointerdown', 2); assert.equal(h.input().brake, 1); assert.equal(h.input().throttle, 0);
+  h.motion({steer: -.8}); assert.equal(h.input().steer, -.8); assert.equal(h.recenters(), 1);
+  h.pointer('pointerup', 1); assert.equal(h.input().steer, 0); assert.equal(h.input().brake, 1);
+  h.motion({steer: 1}); assert.equal(h.input().throttle, 0); assert.equal(h.input().steer, 0);
+  h.pointer('pointerup', 2); h.neutral();
+  h.pointer('pointerdown', 3); assert.equal(h.recenters(), 2); assert.equal(h.input().steer, 0);
+});
+
+test('tilt waiting and invalid values stay neutral; denied or unavailable sensors retain drag steering', () => {
+  const h = setup({motion: true});
+  h.motion({enabled: true, status: 'waiting'}); h.pointer('pointerdown', 1);
+  h.pointer('pointermove', 1, 300); assert.equal(h.input().steer, 0); assert.equal(h.input().throttle, 1);
+  h.motion({status: 'ready', steer: NaN}); assert.equal(h.input().steer, 0);
+  for (const status of ['denied', 'unavailable', 'off']) {
+    h.motion({enabled: false, status, steer: 0}); assert(h.input().steer > .5);
+  }
+  h.motion({enabled: true, status: 'ready', steer: .4}); assert.equal(h.input().steer, .4);
+});
+
+test('sensor updates cannot revive touch input after pause, crash, rotation or menu interruption', () => {
+  for (const interruption of ['pause', 'crash', 'orientation', 'menu']) {
+    const h = setup({motion: true}); h.motion({enabled: true, status: 'ready'});
+    h.pointer('pointerdown', 1); h.motion({steer: .5});
+    if (interruption === 'pause') h.publish({mode: 'paused'});
+    if (interruption === 'crash') h.publish({crash: {phase: 'fall'}});
+    if (interruption === 'orientation') h.screen.orientation.dispatchEvent(new Event('change'));
+    if (interruption === 'menu') h.publish({menuOpen: true});
+    h.motion({steer: -.9}); h.neutral();
+    h.publish({mode: 'racing', crash: null, menuOpen: false}); h.motion({steer: .9}); h.neutral();
+    h.pointer('pointerup', 1); h.pointer('pointerdown', 2);
+    assert.equal(h.input().throttle, 1); assert.equal(h.input().steer, 0);
+  }
+});
+
+test('real engine responds to tilt while the riding finger stays still and stops on release', () => {
+  const h = setup({engine: true, motion: true}); h.game.setCourse('sierra'); h.game.start();
+  h.motion({enabled: true, status: 'ready'}); h.pointer('pointerdown', 1); h.tick(5);
+  h.motion({steer: .5}); h.tick(.4); assert(h.game.getState().leanAngle > 1);
+  h.pointer('pointerup', 1); h.motion({steer: -.9}); h.tick(1);
+  assert(h.game.getState().throttle < .01); assert.equal(h.controller.getState().steer, 0);
+  assert(Math.abs(h.game.getState().leanAngle) < 1);
+});
 
 test('primary ID zero holds gas; relative analogue steering is finite, clamped and reversible', () => {
   const h = setup();

@@ -27,6 +27,7 @@
   const coarsePointer = matchMedia('(any-pointer: coarse)');
   let touchCapable = coarsePointer.matches || navigator.maxTouchPoints > 0;
   let gestureSeen = false, touchBlocked = false;
+  let motionState = window.ApexMotion?.getState() || {supported:false, enabled:false, status:'unavailable'};
   let previousMode, previousSetup, menuOpen, activePanel = 'home';
   let previousSector = 1, splitNotice = null, lastPlace = '', placeUntil = 0;
   let state = game.getState();
@@ -76,6 +77,23 @@
       else nodes['race-canvas'].focus({preventScroll:true});
     });
   }
+  function syncMotionSettings() {
+    nodes['tilt-settings'].hidden = !touchCapable;
+    nodes['tilt-btn'].disabled = !motionState.supported || motionState.status === 'requesting';
+    nodes['tilt-btn'].setAttribute('aria-pressed', String(motionState.enabled));
+    content(nodes['tilt-btn'].querySelector('b'), motionState.status === 'requesting' ? 'Allow access…' : motionState.enabled ? 'On' : 'Off');
+    nodes['tilt-recenter'].disabled = motionState.status !== 'ready';
+    const notes = {
+      off:'Enable tilt steering, then allow motion access when asked. Touch steering stays available when tilt is off.',
+      requesting:'Allow motion access to steer by tilting your phone.',
+      waiting:'Hold your phone comfortably while the motion sensor starts. Steering stays centered until it is ready.',
+      ready:'Tilt left or right to lean. Hold one finger to accelerate; a second finger brakes. Each new touch centers steering at your current phone angle.',
+      denied:'Motion access was denied. Drag to steer, or allow motion access for this site in your browser and try again.',
+      unavailable:window.isSecureContext === false ? 'Tilt steering needs a secure (HTTPS) connection. You can still drag to steer.' : 'Motion sensing is unavailable on this device or browser. Drag to steer.',
+      error:'Motion access could not be enabled. Drag to steer, or try again.'
+    };
+    content(nodes['tilt-note'], notes[motionState.supported ? motionState.status : 'unavailable'] || notes.off);
+  }
   function syncGestureGuide(s) {
     const playable = s.mode === 'countdown' || s.mode === 'racing';
     const showing = touchCapable && playable && !s.crash && (s.mode === 'countdown' || s.time < 8);
@@ -86,12 +104,17 @@
     nodes['touch-manual-help'].hidden = s.transmission !== 'manual';
     nodes['touch-riding-help'].hidden = !touchCapable;
     nodes['keyboard-controls'].hidden = touchCapable;
+    content(nodes['gesture-steering'], motionState.enabled ? 'HOLD TO RIDE · TILT TO LEAN' : 'HOLD TO RIDE · DRAG TO LEAN');
+    content(nodes['touch-steering-help'], motionState.enabled
+      ? 'Hold your phone comfortably, then place one finger on the view to accelerate. Tilt the phone left or right to lean; each new touch sets your center.'
+      : 'Place a finger anywhere on the view. Drag it left or right to lean. For tilt steering, enable it in Settings and allow motion access.');
   }
   function enableTouch() {
     if (touchCapable) return;
     touchCapable = true;
     document.body.classList.add('touch-capable');
     previousSetup = undefined;
+    syncMotionSettings();
     update(state);
   }
   function showOrder(list, entries, stage, riders=[]) {
@@ -239,7 +262,7 @@
     content(action.querySelector('span'), paused ? 'RESUME RIDE' : finished ? 'RIDE AGAIN' : 'RIDE');
     content(nodes['change-event-btn'], paused ? 'Ride settings →' : 'Change event →');
     content(nodes['resume-note'], touchCapable ? 'Resume, then begin a fresh touch to ride.' : 'Your ride is paused. Pick up where you left off.');
-    const setup = [s.course,weather,s.transmission,ready || finished,touchCapable].join('/');
+    const setup = [s.course,weather,s.transmission,ready || finished,touchCapable,motionState.enabled].join('/');
     if (setup !== previousSetup) {
       previousSetup = setup;
       setupButtons.forEach(button => {
@@ -256,9 +279,9 @@
       content(nodes['session-weather'], weather === 'rain' ? 'RAIN' : 'CLEAR');
       content(nodes['session-gearbox'], manual ? 'MANUAL' : 'AUTO');
       content(nodes['menu-footer-course'], eventName.toUpperCase());
-      content(nodes['menu-footer-tip'], touchCapable ? 'HOLD TO RIDE · DRAG TO LEAN' : 'HEADPHONES RECOMMENDED');
+      content(nodes['menu-footer-tip'], touchCapable ? motionState.enabled ? 'HOLD TO RIDE · TILT TO LEAN' : 'HOLD TO RIDE · DRAG TO LEAN' : 'HEADPHONES RECOMMENDED');
       frame.setAttribute('aria-label', eventName + (raceMode ? ' motorcycle race' : ' time trial'));
-      nodes['race-canvas'].setAttribute('aria-label', (event.accessible + ' ') + (touchCapable ? 'Hold one finger to accelerate and drag sideways to lean. Hold a second finger to brake. Lift to coast.' : 'Use W to accelerate and A or D to lean. Open the game menu with P or Escape.'));
+      nodes['race-canvas'].setAttribute('aria-label', (event.accessible + ' ') + (touchCapable ? 'Hold one finger to accelerate and ' + (motionState.enabled ? 'tilt your phone' : 'drag sideways') + ' to lean. Hold a second finger to brake. Lift to coast.' : 'Use W to accelerate and A or D to lean. Open the game menu with P or Escape.'));
       nodes['race-canvas'].setAttribute('aria-describedby', touchCapable ? 'touch-riding-help' : 'keyboard-controls');
       nodes['race-board'].hidden = !raceMode;
       nodes.medals.hidden = raceMode;
@@ -410,6 +433,12 @@
   });
   nodes['camera-btn'].addEventListener('click',game.cycleCamera);
   nodes['sound-btn'].addEventListener('click',game.toggleSound);
+  nodes['tilt-btn'].addEventListener('click',() => {
+    // iPhone permission must be requested directly from this user gesture.
+    if (motionState.enabled) window.ApexMotion.disable();
+    else window.ApexMotion?.enable();
+  });
+  nodes['tilt-recenter'].addEventListener('click',() => window.ApexMotion?.recenter());
   nodes['full-btn'].addEventListener('click',() => {
     if (nativeFull()) {
       const exit = document.exitFullscreen || document.webkitExitFullscreen;
@@ -441,6 +470,14 @@
   });
   frame.addEventListener('pointerdown',e => {if (e.pointerType === 'touch') enableTouch();},{passive:true,capture:true});
   coarsePointer.addEventListener?.('change',e => {if (e.matches) enableTouch();});
+  window.addEventListener('apex:motion',e => {
+    const previous = motionState;
+    motionState = e.detail;
+    if (previous.enabled === motionState.enabled && previous.status === motionState.status && previous.supported === motionState.supported) return;
+    syncMotionSettings();
+    if (previous.enabled !== motionState.enabled) gestureSeen = false;
+    update(state);
+  });
   window.addEventListener('apex:touch',e => {
     const input = e.detail || {};
     if (input.available || input.pointers > 0) enableTouch();
@@ -455,5 +492,6 @@
   buildGarage();
   showPanel('home');
   syncFullscreen();
+  syncMotionSettings();
   update(state);
 })();

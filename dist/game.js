@@ -5765,6 +5765,137 @@ window.ApexRace = (() => {
 })();
 
 ;
+/* motion.js */
+/* Optional, permission-gated phone tilt. Touch still owns acceleration/braking. */
+window.ApexMotion = (() => {
+  'use strict';
+  const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+  const radians = Math.PI / 180;
+  let enabled = false, status = 'off', steer = 0, generation = 0;
+  let sample = null, neutral = null, lastTime = null, waitingTimer = null, pending = null;
+  let listeners = [], published = '';
+  const supported = () => window.isSecureContext !== false && typeof window.DeviceOrientationEvent !== 'undefined';
+  const getState = () => ({ supported: supported(), enabled, status, steer });
+  function publish() {
+    const detail = getState(), key = JSON.stringify(detail);
+    if (key === published) return;
+    published = key;
+    window.dispatchEvent(new CustomEvent('apex:motion', { detail }));
+  }
+  function listen(target, name, callback) {
+    if (!target?.addEventListener) return;
+    target.addEventListener(name, callback);
+    listeners.push(() => target.removeEventListener(name, callback));
+  }
+  function clearWait() {
+    if (waitingTimer !== null) clearTimeout(waitingTimer);
+    waitingTimer = null;
+  }
+  function stop(nextStatus) {
+    generation++;
+    clearWait();
+    listeners.forEach(remove => remove());
+    listeners = [];
+    pending = null;
+    enabled = false; status = nextStatus; steer = 0;
+    sample = neutral = lastTime = null;
+    publish();
+  }
+  function waitForSample() {
+    clearWait();
+    if (document.hidden) return;
+    const token = generation;
+    waitingTimer = setTimeout(() => {
+      if (token === generation && enabled && status === 'waiting') stop('unavailable');
+    }, 4000);
+  }
+  function resetSample() {
+    if (!enabled) return;
+    sample = neutral = lastTime = null;
+    steer = 0; status = 'waiting';
+    waitForSample();
+    publish();
+  }
+  function recenter() {
+    if (!enabled) return;
+    neutral = sample;
+    steer = 0;
+    lastTime = null;
+    publish();
+  }
+  function angle() {
+    const value = window.screen?.orientation?.angle;
+    return Number.isFinite(value) ? value : Number.isFinite(window.orientation) ? window.orientation : 0;
+  }
+  function orientation(event) {
+    if (!enabled || document.hidden) return;
+    if (!Number.isFinite(event.beta) || !Number.isFinite(event.gamma)) {
+      if (status === 'ready') resetSample();
+      return;
+    }
+    const beta = event.beta * radians, gamma = event.gamma * radians, screen = angle() * radians;
+    // W3C Z-X'-Y'' orientation: world-up in device coordinates is
+    // (-cos(beta)*sin(gamma), sin(beta), cos(beta)*cos(gamma)). Project
+    // gravity onto screen-right; positive means the right edge drops.
+    // Unlike raw Euler angles this remains continuous through their wrap.
+    const right = Math.cos(beta) * Math.sin(gamma) * Math.cos(screen) + Math.sin(beta) * Math.sin(screen);
+    sample = Math.asin(clamp(right, -1, 1)) / radians;
+    const now = performance.now();
+    if (neutral === null) neutral = sample;
+    const delta = sample - neutral;
+    const target = Math.sign(delta) * clamp((Math.abs(delta) - 3) / 25, 0, 1);
+    const elapsed = lastTime === null ? 1 / 60 : clamp((now - lastTime) / 1000, 0, .25);
+    steer += (target - steer) * (1 - Math.exp(-elapsed / .075));
+    if (Math.abs(steer) < .001) steer = 0;
+    lastTime = now;
+    status = 'ready';
+    clearWait();
+    publish();
+  }
+  function activate(token) {
+    if (token !== generation) return false;
+    enabled = true; status = 'waiting';
+    listen(window, 'deviceorientation', orientation);
+    listen(window, 'orientationchange', resetSample);
+    listen(window.screen?.orientation, 'change', resetSample);
+    listen(window, 'blur', resetSample);
+    listen(window, 'focus', resetSample);
+    listen(document, 'visibilitychange', resetSample);
+    waitForSample();
+    publish();
+    return true;
+  }
+  function enable() {
+    if (enabled) return Promise.resolve(true);
+    if (pending) return pending;
+    if (!supported()) { stop('unavailable'); return Promise.resolve(false); }
+    const token = ++generation;
+    status = 'requesting'; steer = 0;
+    publish();
+    let permission;
+    try {
+      // Must run directly in the button's user gesture, before any await.
+      permission = typeof window.DeviceOrientationEvent.requestPermission === 'function'
+        ? window.DeviceOrientationEvent.requestPermission() : 'granted';
+    } catch {
+      if (token === generation) stop('error');
+      return Promise.resolve(false);
+    }
+    pending = Promise.resolve(permission).then(result => {
+      if (token !== generation) return false;
+      pending = null;
+      if (result !== 'granted') { stop('denied'); return false; }
+      return activate(token);
+    }, () => {
+      if (token === generation) stop('error');
+      return false;
+    });
+    return pending;
+  }
+  return { enable, disable: () => stop('off'), recenter, getState };
+})();
+
+;
 /* touch.js */
 /* Direct riding gestures, confined to the canvas. No on-screen driving buttons. */
 window.ApexTouch = (() => {
@@ -5808,8 +5939,13 @@ window.ApexTouch = (() => {
         brake = contacts.size > (first ? 1 : 0) ? 1 : 0;
         throttle = first && !brake ? 1 : 0;
         if (first) {
-          const dx = first.x - first.startX, dead = clamp(rect.width * .018, 7, 12);
-          steer = Math.sign(dx) * clamp((Math.abs(dx) - dead) / (travel() - dead), 0, 1);
+          const motion = window.ApexMotion?.getState();
+          if (motion?.enabled) {
+            steer = motion.status === 'ready' && Number.isFinite(motion.steer) ? clamp(motion.steer, -1, 1) : 0;
+          } else {
+            const dx = first.x - first.startX, dead = clamp(rect.width * .018, 7, 12);
+            steer = Math.sign(dx) * clamp((Math.abs(dx) - dead) / (travel() - dead), 0, 1);
+          }
         }
       }
       output = { steer, throttle, brake };
@@ -5860,7 +5996,10 @@ window.ApexTouch = (() => {
         shiftReady: true, shiftOriginY: event.clientY, shiftAt: -Infinity
       });
       if (state.crash) { blocked = true; primary = null; reason = 'crash'; }
-      if (contacts.size === 1 && !blocked) { primary = event.pointerId; reason = ''; }
+      if (contacts.size === 1 && !blocked) {
+        primary = event.pointerId; reason = '';
+        window.ApexMotion?.recenter();
+      }
       try { surface.setPointerCapture(event.pointerId); } catch { /* Window terminal listeners still release it. */ }
       apply();
     }
@@ -5965,6 +6104,10 @@ window.ApexTouch = (() => {
     listen(window, 'pointercancel', cancel, { passive: false });
     listen(surface, 'lostpointercapture', lost);
     listen(window, 'apex:update', update);
+    listen(window, 'apex:motion', () => {
+      state = game.getState();
+      apply();
+    });
     listen(window, 'apex:input-reset', event => {
       state = game.getState();
       updateSurface();
@@ -6160,6 +6303,7 @@ window.ApexTelemetry = (() => {
   const coarsePointer = matchMedia('(any-pointer: coarse)');
   let touchCapable = coarsePointer.matches || navigator.maxTouchPoints > 0;
   let gestureSeen = false, touchBlocked = false;
+  let motionState = window.ApexMotion?.getState() || {supported:false, enabled:false, status:'unavailable'};
   let previousMode, previousSetup, menuOpen, activePanel = 'home';
   let previousSector = 1, splitNotice = null, lastPlace = '', placeUntil = 0;
   let state = game.getState();
@@ -6209,6 +6353,23 @@ window.ApexTelemetry = (() => {
       else nodes['race-canvas'].focus({preventScroll:true});
     });
   }
+  function syncMotionSettings() {
+    nodes['tilt-settings'].hidden = !touchCapable;
+    nodes['tilt-btn'].disabled = !motionState.supported || motionState.status === 'requesting';
+    nodes['tilt-btn'].setAttribute('aria-pressed', String(motionState.enabled));
+    content(nodes['tilt-btn'].querySelector('b'), motionState.status === 'requesting' ? 'Allow access…' : motionState.enabled ? 'On' : 'Off');
+    nodes['tilt-recenter'].disabled = motionState.status !== 'ready';
+    const notes = {
+      off:'Enable tilt steering, then allow motion access when asked. Touch steering stays available when tilt is off.',
+      requesting:'Allow motion access to steer by tilting your phone.',
+      waiting:'Hold your phone comfortably while the motion sensor starts. Steering stays centered until it is ready.',
+      ready:'Tilt left or right to lean. Hold one finger to accelerate; a second finger brakes. Each new touch centers steering at your current phone angle.',
+      denied:'Motion access was denied. Drag to steer, or allow motion access for this site in your browser and try again.',
+      unavailable:window.isSecureContext === false ? 'Tilt steering needs a secure (HTTPS) connection. You can still drag to steer.' : 'Motion sensing is unavailable on this device or browser. Drag to steer.',
+      error:'Motion access could not be enabled. Drag to steer, or try again.'
+    };
+    content(nodes['tilt-note'], notes[motionState.supported ? motionState.status : 'unavailable'] || notes.off);
+  }
   function syncGestureGuide(s) {
     const playable = s.mode === 'countdown' || s.mode === 'racing';
     const showing = touchCapable && playable && !s.crash && (s.mode === 'countdown' || s.time < 8);
@@ -6219,12 +6380,17 @@ window.ApexTelemetry = (() => {
     nodes['touch-manual-help'].hidden = s.transmission !== 'manual';
     nodes['touch-riding-help'].hidden = !touchCapable;
     nodes['keyboard-controls'].hidden = touchCapable;
+    content(nodes['gesture-steering'], motionState.enabled ? 'HOLD TO RIDE · TILT TO LEAN' : 'HOLD TO RIDE · DRAG TO LEAN');
+    content(nodes['touch-steering-help'], motionState.enabled
+      ? 'Hold your phone comfortably, then place one finger on the view to accelerate. Tilt the phone left or right to lean; each new touch sets your center.'
+      : 'Place a finger anywhere on the view. Drag it left or right to lean. For tilt steering, enable it in Settings and allow motion access.');
   }
   function enableTouch() {
     if (touchCapable) return;
     touchCapable = true;
     document.body.classList.add('touch-capable');
     previousSetup = undefined;
+    syncMotionSettings();
     update(state);
   }
   function showOrder(list, entries, stage, riders=[]) {
@@ -6372,7 +6538,7 @@ window.ApexTelemetry = (() => {
     content(action.querySelector('span'), paused ? 'RESUME RIDE' : finished ? 'RIDE AGAIN' : 'RIDE');
     content(nodes['change-event-btn'], paused ? 'Ride settings →' : 'Change event →');
     content(nodes['resume-note'], touchCapable ? 'Resume, then begin a fresh touch to ride.' : 'Your ride is paused. Pick up where you left off.');
-    const setup = [s.course,weather,s.transmission,ready || finished,touchCapable].join('/');
+    const setup = [s.course,weather,s.transmission,ready || finished,touchCapable,motionState.enabled].join('/');
     if (setup !== previousSetup) {
       previousSetup = setup;
       setupButtons.forEach(button => {
@@ -6389,9 +6555,9 @@ window.ApexTelemetry = (() => {
       content(nodes['session-weather'], weather === 'rain' ? 'RAIN' : 'CLEAR');
       content(nodes['session-gearbox'], manual ? 'MANUAL' : 'AUTO');
       content(nodes['menu-footer-course'], eventName.toUpperCase());
-      content(nodes['menu-footer-tip'], touchCapable ? 'HOLD TO RIDE · DRAG TO LEAN' : 'HEADPHONES RECOMMENDED');
+      content(nodes['menu-footer-tip'], touchCapable ? motionState.enabled ? 'HOLD TO RIDE · TILT TO LEAN' : 'HOLD TO RIDE · DRAG TO LEAN' : 'HEADPHONES RECOMMENDED');
       frame.setAttribute('aria-label', eventName + (raceMode ? ' motorcycle race' : ' time trial'));
-      nodes['race-canvas'].setAttribute('aria-label', (event.accessible + ' ') + (touchCapable ? 'Hold one finger to accelerate and drag sideways to lean. Hold a second finger to brake. Lift to coast.' : 'Use W to accelerate and A or D to lean. Open the game menu with P or Escape.'));
+      nodes['race-canvas'].setAttribute('aria-label', (event.accessible + ' ') + (touchCapable ? 'Hold one finger to accelerate and ' + (motionState.enabled ? 'tilt your phone' : 'drag sideways') + ' to lean. Hold a second finger to brake. Lift to coast.' : 'Use W to accelerate and A or D to lean. Open the game menu with P or Escape.'));
       nodes['race-canvas'].setAttribute('aria-describedby', touchCapable ? 'touch-riding-help' : 'keyboard-controls');
       nodes['race-board'].hidden = !raceMode;
       nodes.medals.hidden = raceMode;
@@ -6543,6 +6709,12 @@ window.ApexTelemetry = (() => {
   });
   nodes['camera-btn'].addEventListener('click',game.cycleCamera);
   nodes['sound-btn'].addEventListener('click',game.toggleSound);
+  nodes['tilt-btn'].addEventListener('click',() => {
+    // iPhone permission must be requested directly from this user gesture.
+    if (motionState.enabled) window.ApexMotion.disable();
+    else window.ApexMotion?.enable();
+  });
+  nodes['tilt-recenter'].addEventListener('click',() => window.ApexMotion?.recenter());
   nodes['full-btn'].addEventListener('click',() => {
     if (nativeFull()) {
       const exit = document.exitFullscreen || document.webkitExitFullscreen;
@@ -6574,6 +6746,14 @@ window.ApexTelemetry = (() => {
   });
   frame.addEventListener('pointerdown',e => {if (e.pointerType === 'touch') enableTouch();},{passive:true,capture:true});
   coarsePointer.addEventListener?.('change',e => {if (e.matches) enableTouch();});
+  window.addEventListener('apex:motion',e => {
+    const previous = motionState;
+    motionState = e.detail;
+    if (previous.enabled === motionState.enabled && previous.status === motionState.status && previous.supported === motionState.supported) return;
+    syncMotionSettings();
+    if (previous.enabled !== motionState.enabled) gestureSeen = false;
+    update(state);
+  });
   window.addEventListener('apex:touch',e => {
     const input = e.detail || {};
     if (input.available || input.pointers > 0) enableTouch();
@@ -6588,5 +6768,6 @@ window.ApexTelemetry = (() => {
   buildGarage();
   showPanel('home');
   syncFullscreen();
+  syncMotionSettings();
   update(state);
 })();

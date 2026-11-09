@@ -2,7 +2,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {Script} from 'node:vm';
 import {createHash} from 'node:crypto';
 
-const modules = ['motorcycles', 'coast', 'london', 'world-model', 'environment', 'scenery', 'rider-weather', 'collision-fx', 'rivals', 'bike-garage', 'mirrors', 'bike', 'collision', 'race', 'engine', 'touch', 'telemetry', 'ui'];
+const modules = ['motorcycles', 'coast', 'london', 'world-model', 'environment', 'scenery', 'rider-weather', 'collision-fx', 'rivals', 'bike-garage', 'mirrors', 'bike', 'collision', 'race', 'engine', 'motion', 'touch', 'telemetry', 'ui'];
 const parts = await Promise.all(modules.map(async name => {
   const source = await readFile(new URL('./src/' + name + '.js', import.meta.url), 'utf8');
   new Script(source, {filename:name + '.js'});

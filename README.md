@@ -87,6 +87,10 @@ Use the left stick to steer, the right trigger to accelerate, and the left trigg
 
 Hold one finger on the game to accelerate and move it sideways to steer. Hold a second finger to brake; lift your fingers to coast. In manual mode, move the first finger quickly up or down to change gear.
 
+For **iPhone tilt steering**, open **Settings → Tilt steering** and allow motion access. Hold your phone comfortably, then touch the game to accelerate and tilt left or right to steer. Each fresh touch centers steering at your current phone angle; a second finger still brakes. Portrait and both landscape orientations are supported. Rotating the screen resets held controls, so lift your fingers and resume with a fresh touch. Turn tilt off to return to drag steering.
+
+Tilt steering requires HTTPS (or localhost) and a browser with motion sensors. If access is denied or no sensor readings arrive, drag steering remains available. Motion access is requested only when you enable tilt; it is off after a page reload.
+
 </details>
 
 Release the driving controls after a pause or crash recovery. Then apply them again.
@@ -121,7 +125,7 @@ for test_file in tests/*.cjs; do
 done
 ```
 
-The eight test files cover collisions, courses, menus, mirrors, motorcycles, touch input logic, and the shared native simulation. They use simulated browser and native hosts; browser layout and physical touch or game controller input require separate testing.
+The nine test files cover collisions, courses, menus, mirrors, motorcycles, touch and motion input logic, and the shared native simulation. They use simulated browser and native hosts; browser layout and physical touch or game controller input require separate testing.
 
 ### Project layout
 

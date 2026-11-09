@@ -40,8 +40,13 @@ window.ApexTouch = (() => {
         brake = contacts.size > (first ? 1 : 0) ? 1 : 0;
         throttle = first && !brake ? 1 : 0;
         if (first) {
-          const dx = first.x - first.startX, dead = clamp(rect.width * .018, 7, 12);
-          steer = Math.sign(dx) * clamp((Math.abs(dx) - dead) / (travel() - dead), 0, 1);
+          const motion = window.ApexMotion?.getState();
+          if (motion?.enabled) {
+            steer = motion.status === 'ready' && Number.isFinite(motion.steer) ? clamp(motion.steer, -1, 1) : 0;
+          } else {
+            const dx = first.x - first.startX, dead = clamp(rect.width * .018, 7, 12);
+            steer = Math.sign(dx) * clamp((Math.abs(dx) - dead) / (travel() - dead), 0, 1);
+          }
         }
       }
       output = { steer, throttle, brake };
@@ -92,7 +97,10 @@ window.ApexTouch = (() => {
         shiftReady: true, shiftOriginY: event.clientY, shiftAt: -Infinity
       });
       if (state.crash) { blocked = true; primary = null; reason = 'crash'; }
-      if (contacts.size === 1 && !blocked) { primary = event.pointerId; reason = ''; }
+      if (contacts.size === 1 && !blocked) {
+        primary = event.pointerId; reason = '';
+        window.ApexMotion?.recenter();
+      }
       try { surface.setPointerCapture(event.pointerId); } catch { /* Window terminal listeners still release it. */ }
       apply();
     }
@@ -197,6 +205,10 @@ window.ApexTouch = (() => {
     listen(window, 'pointercancel', cancel, { passive: false });
     listen(surface, 'lostpointercapture', lost);
     listen(window, 'apex:update', update);
+    listen(window, 'apex:motion', () => {
+      state = game.getState();
+      apply();
+    });
     listen(window, 'apex:input-reset', event => {
       state = game.getState();
       updateSurface();
